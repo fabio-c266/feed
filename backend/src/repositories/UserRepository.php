@@ -1,32 +1,27 @@
 <?php
 
-namespace src\Models;
+namespace src\repositories;
 
-use Exception;
-use src\Config\Database;
-use src\Core\Query;
+use src\config\Database;
+use src\core\Query;
 
-class UserModel
+class UserRepository
 {
-    protected string $tableName = 'users';
+    private string $tableName = 'users';
 
     public function create(array $data)
     {
-        try {
-            $queryContent = (new Query(tableName: $this->tableName))
-                ->insert(columns: ['id_public', 'username', 'email', 'password'], data: $data)
-                ->build();
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->insert(columns: ['id', 'username', 'email', 'password', 'image_id'], data: $data)
+            ->build();
 
-            Database::query($queryContent);
-        } catch (Exception $except) {
-            return $except->getMessage();
-        }
+        Database::query($queryContent);
     }
 
     public function findUserByEmail(string $email)
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id_public', 'email', 'password'])
+            ->select(['id', 'email', 'password'])
             ->where('email', $email)
             ->build();
 
@@ -37,7 +32,7 @@ class UserModel
     public function findByUsername(string $username)
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id_public', 'username', 'password'])
+            ->select(['id', 'username', 'password'])
             ->where('username', $username)
             ->build();
 
@@ -45,11 +40,11 @@ class UserModel
         return $user ? $user[0] : null;
     }
 
-    public function findOne(string $idPublic)
+    public function findOne(string $id)
     {
         $queryContent = (new Query(tableName: $this->tableName))
             ->select()
-            ->where('id_public', $idPublic)
+            ->where('id', $id)
             ->build();
 
         $user = Database::query($queryContent);

@@ -1,34 +1,36 @@
 <?php
 
-namespace src\Core;
+namespace src\core;
 
-use src\Core\Route;
+use Exception;
+use ReflectionClass;
+use src\core\Route;
 
 class Routes
 {
     private static array $routes = [];
 
-    public static function get($endpoint, $controller, $requireAuth = false)
+    public static function get($endpoint, $controller, $requireAuth = false): void
     {
-        return self::save_router('GET', $endpoint, $controller, $requireAuth);
+        self::save_router('GET', $endpoint, $controller, $requireAuth);
     }
 
-    public static function post($endpoint, $controller, $requireAuth = false)
+    public static function post($endpoint, $controller, $requireAuth = false): void
     {
-        return self::save_router('POST', $endpoint, $controller, $requireAuth);
+        self::save_router('POST', $endpoint, $controller, $requireAuth);
     }
 
-    public static function put($endpoint, $controller, $requireAuth = false)
+    public static function put($endpoint, $controller, $requireAuth = false): void
     {
-        return self::save_router('PUT', $endpoint, $controller, $requireAuth);
+        self::save_router('PUT', $endpoint, $controller, $requireAuth);
     }
 
-    public static function delete($endpoint, $controller, $requireAuth = false)
+    public static function delete($endpoint, $controller, $requireAuth = false): void
     {
-        return self::save_router('DELETE', $endpoint, $controller, $requireAuth);
+        self::save_router('DELETE', $endpoint, $controller, $requireAuth);
     }
 
-    public static function get_route(string $httpMethod, $endpoint)
+    public static function get_route(string $httpMethod, $endpoint): Route | null
     {
         $foundRoute = null;
 
@@ -42,14 +44,10 @@ class Routes
         return $foundRoute;
     }
 
-    private static function save_router($httpMethod, $endpoint, $controller, bool $requireAuth)
+    private static function save_router(string $httpMethod, string $endpoint, string $controller, bool $requireAuth): void
     {
-        if (array_keys(self::$routes, $endpoint)) {
-            return 'Router with this endpoint is already registered.';
-        }
-
         if (empty($controller) || !str_contains($controller, '::')) {
-            return 'Invalid controller format';
+            throw new Exception("Invalid controller format. Use: <controllerName>::<classMethod>");
         }
 
         $controllerSplited = explode('::', $controller);
@@ -59,19 +57,23 @@ class Routes
         $controllerFile = "src/Controllers/{$controllerName}.php";
 
         if (!file_exists($controllerFile)) {
-            return "Invalid controller";
+            throw new Exception("Not found controller file {$controllerName}");
         }
 
         $class = "\src\Controllers\\{$controllerName}";
 
         if (!class_exists($class)) {
-            return "This class not exists in file {$controllerName}";
+            throw new Exception("The class {$controllerName} not exists in file {$controllerName}.php");
         }
 
-        $classInstance = new $class();
+        $classReflection = new ReflectionClass($class);
+        $classConstructor = $classReflection->getConstructor();
+        $constructArgs = File::resolveClassConstructorDependencies($classConstructor);
+
+        $classInstance = new $class(...$constructArgs);
 
         if (!method_exists($classInstance, $controllerMethod)) {
-            return "This method not exists in class.";
+            throw new Exception("The method {$controllerMethod} not exists in class {$controllerName}.");
         }
 
         $route = new Route($httpMethod, $endpoint, $controllerName, $controllerMethod, $requireAuth);

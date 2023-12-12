@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Core;
+namespace src\core;
 
 use Exception;
 use Firebase\JWT\JWT as jwtLib;
@@ -8,7 +8,7 @@ use Firebase\JWT\Key as jwtLibKey;
 
 class JWT
 {
-    public static function generate($data)
+    public static function generate($data): string
     {
         $payload = [
             "exp" => time() + 20, //6 Hours 3600 * 6

@@ -1,10 +1,10 @@
 <?php
 
-namespace src\Core;
+namespace src\core;
 
-class BroswerCore 
+class BroswerCore
 {
-    public static function resolve($server) 
+    public static function resolve($server): void
     {
         if ($server['REQUEST_METHOD'] === 'OPTIONS') {
             header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');

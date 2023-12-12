@@ -1,44 +1,48 @@
 <?php
 
-namespace src\Controllers;
+namespace src\controllers;
 
 use Exception;
-use src\Core\Response;
-use src\Core\UUID;
-use src\Helpers\ValidationsHelper;
-use src\Models\UserModel;
+use src\core\Response;
+use src\core\UUID;
+use src\helpers\ValidationsHelper;
+use src\repositories\UserRepository;
 
 class UserController
 {
+    public function __construct(private readonly UserRepository $userRepository)
+    {
+    }
+
     public function create($req)
     {
         $body = $req['body'];
+
         $bodySchema = [
-            "username" => ["string"],
-            "email" => ['string'],
-            'password' => ['string']
+            "username" => 'string | required | maxLen:16',
+            "email" => 'string | required | email',
+            'password' => 'string | required | minLen:6 | maxLen:20',
         ];
 
-        $isValidSchema = ValidationsHelper::schema(schema: $bodySchema, data: $body);
-
-        if (!$isValidSchema) {
-            throw new Exception("Body inválido.", Response::HTTP_BAD_REQUEST);
+        try {
+            ValidationsHelper::schema(schema: $bodySchema, data: $body);
+        } catch (Exception $execpt) {
+            throw new Exception($execpt->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 
         $username = $body['username'];
 
         if (strlen($username) > 19) {
-            throw new Exception("", Response::HTTP_BAD_REQUEST);
+            throw new Exception("O username não pode ser maior que 19 caracteris.", Response::HTTP_BAD_REQUEST);
         }
 
         $email = strtolower(trim($body['email']));
-        $userModel = new UserModel();
 
-        if ($userModel->findByUsername($username)) {
+        if ($this->userRepository->findByUsername($username)) {
             throw new Exception("Já existe um usuário com esse username.", Response::HTTP_CONFLICT);
         }
 
-        if ($userModel->findUserByEmail($email)) {
+        if ($this->userRepository->findUserByEmail($email)) {
             throw new Exception("Já existe um usuário com esse email.", Response::HTTP_CONFLICT);
         }
 
@@ -52,7 +56,7 @@ class UserController
         $passwordHashed = password_hash($password, PASSWORD_BCRYPT, ["cost" => 6]);
 
         $data = [
-            "id_public" => UUID::generate(),
+            "id" => UUID::generate(),
             "username" => $username,
             "email" => $email,
             "password" => $passwordHashed,
@@ -60,9 +64,17 @@ class UserController
         ];
 
         try {
-            $userModel->create($data);
+            $this->userRepository->create($data);
+            unset($data['password']);
+
+            return Response::json($data);
         } catch (Exception $error) {
             throw new Exception("Não foi possível criar o usuário.", Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function get($req)
+    {
+        return Response::json(["message" => "sucesso"]);
     }
 }

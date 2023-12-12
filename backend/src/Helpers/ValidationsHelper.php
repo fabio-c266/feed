@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Helpers;
+namespace src\helpers;
 
 use Exception;
 
@@ -8,37 +8,38 @@ class ValidationsHelper
 {
     public static function schema(array $schema, array $data)
     {
-        $avaliableTypes = [
-            "string",
-            "int",
-            "float",
-            "array",
-            "object",
-            "optinal"
-        ];
-
         foreach ($schema as $schemaKey => $schemaValue) {
-            $equalsValues = array_intersect($avaliableTypes, $schemaValue);
-            if (count($equalsValues) < 1) return new Exception("Invalid schema data in {$schemaKey}.");
+            if (gettype($schemaValue) != 'string') throw new Exception("Invalid schema value in {$schemaKey}. Use validation1 | validation2 ...");
 
-            if (in_array('optinal', $schemaValue) && !array_key_exists($schemaKey, $data)) return true;
-            $newSchemaValue = array_filter($schemaValue, function ($value) {
-                return $value != 'optinal';
-            });
+            $validationsString = StringHelper::trim($schemaValue);
+            $validationsMethods = str_contains($validationsString, '|') ? explode('|', $validationsString) : [$validationsString];
 
-            return self::validateType(types: $newSchemaValue, value: $data[$schemaKey]);
-        }
+            foreach ($validationsMethods as $value) {
+                $dataValue = $data[$schemaKey] ?? null;
+                $validationMethod = $value;
+                $param = '';
+                $allowFailType = in_array('nullable', $validationsMethods) ? true : false;
 
-        return true;
-    }
+                if (in_array('string', $validationsMethods) && str_contains($value, ':')) {
+                    [$stringMethod, $stringValue] = explode(':', $value);
 
-    public static function validateType(array $types, $value)
-    {
-        foreach ($types as $type) {
-            $dataValueType = gettype($value);
+                    $validationMethod = $stringMethod;
+                    $param = (int)$stringValue;
+                }
 
-            if ($dataValueType === "string" && $value === '') return false;
-            return $dataValueType === $type;
+                $class = "src\\core\\ValidationsMethods";
+                $classInstance = new $class();
+
+                if (!method_exists($classInstance, $validationMethod)) {
+                    throw new Exception("Invalid value {$value} in {$schemaKey}.");
+                }
+
+                try {
+                    call_user_func([$classInstance, $validationMethod], $dataValue, $param, $allowFailType);
+                } catch (Exception $except) {
+                    throw new Exception("{$schemaKey} {$except->getMessage()}");
+                }
+            }
         }
     }
 }

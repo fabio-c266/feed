@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Core;
+namespace src\core;
 
 class Response
 {
@@ -78,7 +78,7 @@ class Response
         return json_encode(self::structData($data, $statusCode));
     }
 
-    private static function structData(array $data, ?int $statusCode)
+    private static function structData(array $data, ?int $statusCode): array
     {
         return [
             "status" => $statusCode,

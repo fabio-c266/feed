@@ -1,16 +1,16 @@
 <?php
 
-namespace src\Core;
+namespace src\core;
 
 use Exception;
-use src\Core\BroswerCore;
-use src\Core\JWT;
+use src\core\BroswerCore;
+use src\core\JWT;
 
 require './src/routes.php';
 
 class Request
 {
-    public static function handler($server)
+    public static function handler($server): void
     {
         BroswerCore::resolve($server);
 
@@ -47,15 +47,11 @@ class Request
                 $jwtData = JWT::get_data($token);
 
                 if (!$jwtData) {
-                    return throw new Exception('Invalid token.', Response::HTTP_UNAUTHORIZED);
+                    throw new Exception('Invalid token.', Response::HTTP_UNAUTHORIZED);
                 }
 
                 $server['jwt_data'] = $jwtData;
             }
-
-            $className = $route->controllerName;
-            $class = "src\Controllers\\{$className}";
-            $classInstance = new $class();
 
             if ($route->httpMethod === "POST") {
                 $body = json_decode(file_get_contents('php://input'), true);
@@ -64,7 +60,7 @@ class Request
 
             $server['query'] = $parsed_url['query'] ?? '';
 
-            echo call_user_func([$classInstance, $route->controllerMethod], $server);
+            echo File::executeClass(fileName: $route->controllerName, classMethod: $route->controllerMethod, methodParams: [$server]);
         } catch (Exception $except) {
             $data = [
                 "message" => $except->getMessage(),

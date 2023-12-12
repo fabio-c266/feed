@@ -1,7 +1,8 @@
 <?php
 
-namespace src\Config;
+namespace src\config;
 
+use Exception;
 use PDO;
 use PDOException;
 
@@ -13,7 +14,7 @@ class Database
     {
         $hostname = $_ENV['DB_HOST'];
         $user = $_ENV['DB_USER'];
-        $password = $_ENV['DB_PASSWORD'];
+        $password = $_ENV['DB_PASSWORD'] ?? '';
         $dbName = $_ENV['DB_NAME'];
 
         try {
@@ -22,7 +23,7 @@ class Database
 
             self::$connection = $connection;
         } catch (PDOException $error) {
-            exit("Fail to connect the database because: {$error->getMessage()}");
+            throw new Exception("Failed to connect to the database: {$error->getMessage()}");
         }
     }
 
@@ -31,17 +32,13 @@ class Database
         try {
             $connection = self::$connection;
             $result = $connection->prepare($queryContent);
-            $result->execute();
 
-            if ($result) {
+            if ($result->execute()) {
                 $rows = $result->fetchAll(PDO::FETCH_ASSOC);
                 return $rows;
-            } else {
-                return false;
             }
         } catch (PDOException $error) {
-            trigger_error("Fail to execute query because: {$error->getMessage()}");
-            exit();
+            throw new Exception("Fail to execute query because: {$error->getMessage()}");
         }
     }
 }

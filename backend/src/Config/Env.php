@@ -1,25 +1,26 @@
 <?php
 
-namespace src\Config;
+namespace src\config;
 
-use src\Helpers\ValidationsHelper;
+use Exception;
+use src\helpers\ValidationsHelper;
 
-class Env 
+class Env
 {
-    public static function validate() 
+    public static function validate()
     {
         $envSchema = [
-            "DB_HOST" => ["string"],
-            "DB_USER" => ["string"],
-            "DB_PASSWORD" => ["string"],
-            "DB_NAME" => ["string"],
-            "JWT_SECRET" => ["string"]
+            "DB_HOST" =>     'string | required',
+            "DB_USER" =>     'string | required',
+            "DB_PASSWORD" => 'string | nullable',
+            "DB_NAME" =>     'string | required',
+            "JWT_SECRET" =>  'string | required'
         ];
 
-        $isValidEnvData = ValidationsHelper::schema(schema: $envSchema, data: $_ENV);
-
-        if (!$isValidEnvData) {
-            exit('Invalid invoriments variables.');
+        try {
+            ValidationsHelper::schema(schema: $envSchema, data: $_ENV);
+        } catch (Exception $execpt) {
+            exit("Invalid invoriments variables becausa: \n\n{$execpt->getMessage()}");
         }
     }
 }
