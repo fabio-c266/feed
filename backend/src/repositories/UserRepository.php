@@ -21,7 +21,7 @@ class UserRepository
     public function findUserByEmail(string $email)
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id', 'email', 'password'])
+            ->select(['id', 'email', 'username', 'password'])
             ->where('email', $email)
             ->build();
 
@@ -32,7 +32,7 @@ class UserRepository
     public function findByUsername(string $username)
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id', 'username', 'password'])
+            ->select(['id', 'email', 'username', 'password'])
             ->where('username', $username)
             ->build();
 
