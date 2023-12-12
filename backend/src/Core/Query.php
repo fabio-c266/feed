@@ -37,6 +37,12 @@ class Query
         return $this;
     }
 
+    public function update(string $column, $data)
+    {
+        $this->queryContent = $this->queryContent . "UPDATE {$this->tableName} SET {$column} = '{$data}'";
+        return $this;
+    }
+
     public function build()
     {
         return $this->queryContent;

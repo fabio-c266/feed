@@ -15,10 +15,9 @@ class ValidationsHelper
             $validationsMethods = str_contains($validationsString, '|') ? explode('|', $validationsString) : [$validationsString];
 
             foreach ($validationsMethods as $value) {
-                $dataValue = $data[$schemaKey] ?? null;
+                $dataValue = $data[$schemaKey] ?? (in_array('string', $validationsMethods) ? '' : null);
                 $validationMethod = $value;
                 $param = '';
-                $allowFailType = in_array('nullable', $validationsMethods) ? true : false;
 
                 if (in_array('string', $validationsMethods) && str_contains($value, ':')) {
                     [$stringMethod, $stringValue] = explode(':', $value);
@@ -34,8 +33,12 @@ class ValidationsHelper
                     throw new Exception("Invalid value {$value} in {$schemaKey}.");
                 }
 
+                if (in_array('nullable', $validationsMethods)) {
+                    $classInstance->nullable($dataValue, $param);
+                }
+
                 try {
-                    call_user_func([$classInstance, $validationMethod], $dataValue, $param, $allowFailType);
+                    call_user_func([$classInstance, $validationMethod], $dataValue, $param);
                 } catch (Exception $except) {
                     throw new Exception("{$schemaKey} {$except->getMessage()}");
                 }

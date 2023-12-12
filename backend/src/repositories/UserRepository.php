@@ -9,7 +9,7 @@ class UserRepository
 {
     private string $tableName = 'users';
 
-    public function create(array $data)
+    public function create(array $data): void
     {
         $queryContent = (new Query(tableName: $this->tableName))
             ->insert(columns: ['id', 'username', 'email', 'password', 'image_id'], data: $data)
@@ -18,7 +18,7 @@ class UserRepository
         Database::query($queryContent);
     }
 
-    public function findUserByEmail(string $email)
+    public function findUserByEmail(string $email): array | null
     {
         $queryContent = (new Query(tableName: $this->tableName))
             ->select(['id', 'email', 'username', 'password'])
@@ -29,7 +29,7 @@ class UserRepository
         return $user ? $user[0] : null;
     }
 
-    public function findByUsername(string $username)
+    public function findByUsername(string $username): array | null
     {
         $queryContent = (new Query(tableName: $this->tableName))
             ->select(['id', 'email', 'username', 'password'])
@@ -40,14 +40,24 @@ class UserRepository
         return $user ? $user[0] : null;
     }
 
-    public function findOne(string $id)
+    public function findOne(string $id): array | null
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select()
+            ->select(['id', 'username', 'email', 'image_id', 'created_at'])
             ->where('id', $id)
             ->build();
 
         $user = Database::query($queryContent);
         return $user ? $user[0] : null;
+    }
+
+    public function update(string $id, string $column, $data): void
+    {
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->update($column, $data)
+            ->where('id', $id)
+            ->build();
+
+        Database::query($queryContent);
     }
 }

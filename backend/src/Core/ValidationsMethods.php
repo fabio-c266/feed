@@ -6,9 +6,11 @@ use Exception;
 
 class ValidationsMethods
 {
-    public function string($input, $param, bool $allowFailType)
+    private bool $isRequired = true;
+
+    public function string($input, $param)
     {
-        if (gettype($input) !== 'string' && !$allowFailType) throw new Exception("precisa ser do tipo string.");
+        if (gettype($input) !== 'string' && $this->isRequired) throw new Exception("Precisa ser do tipo string.");
     }
 
     public function required($value, $param)
@@ -18,17 +20,18 @@ class ValidationsMethods
 
     public function nullable($input, $param)
     {
-        // ONLY INDICATE IF THE DATA IS OPTIONAL    
+        // ONLY INDICATE IF THE DATA IS OPTIONAL  
+        $this->isRequired = false;
     }
 
     public function minLen(string $input, int $minLength)
     {
-        if (strlen($input) < $minLength) throw new Exception("deve ter no mínimo {$minLength} caracteris.");
+        if (strlen($input) < $minLength && $this->isRequired) throw new Exception("deve ter no mínimo {$minLength} caracteris.");
     }
 
     public function maxLen(string $input, int $maxLength)
     {
-        if (strlen($input) > $maxLength) throw new Exception("deve ter no máximo {$maxLength} caracteris.");
+        if (strlen($input) > $maxLength && $this->isRequired) throw new Exception("deve ter no máximo {$maxLength} caracteris.");
     }
 
     public function email(string $input, $param)

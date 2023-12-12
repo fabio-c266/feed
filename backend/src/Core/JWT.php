@@ -11,7 +11,7 @@ class JWT
     public static function generate($data): string
     {
         $payload = [
-            "exp" => time() + 20, //6 Hours 3600 * 6
+            "exp" => time() + 60000, //6 Hours 3600 * 6
             "iat" => time(),
             "data" => $data
         ];

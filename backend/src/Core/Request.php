@@ -5,6 +5,7 @@ namespace src\core;
 use Exception;
 use src\core\BroswerCore;
 use src\core\JWT;
+use src\helpers\StringHelper;
 
 require './src/routes.php';
 
@@ -53,12 +54,14 @@ class Request
                 $server['jwt_data'] = $jwtData;
             }
 
-            if ($route->httpMethod === "POST") {
+            $server['files'] = isset($_FILES) ? $_FILES : [];
+
+            if ($route->httpMethod === "POST" || $route->httpMethod === 'PUT') {
                 $body = json_decode(file_get_contents('php://input'), true);
                 $server['body'] = $body ?? [];
             }
 
-            $server['query'] = $parsed_url['query'] ?? '';
+            $server['query'] = StringHelper::getQueryParams($parsed_url['query'] ?? '');
 
             echo File::executeClass(fileName: $route->controllerName, classMethod: $route->controllerMethod, methodParams: [$server]);
         } catch (Exception $except) {

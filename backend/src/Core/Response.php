@@ -78,6 +78,17 @@ class Response
         return json_encode(self::structData($data, $statusCode));
     }
 
+    public static function image($path)
+    {
+        $imageInfo = getimagesize($path);
+
+        header('Content-Type: ' . $imageInfo['mime']);
+        header('Content-Length: ' . filesize($path));
+
+        http_response_code(200);
+        return readfile($path);
+    }
+
     private static function structData(array $data, ?int $statusCode): array
     {
         return [
