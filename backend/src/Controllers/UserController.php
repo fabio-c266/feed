@@ -70,7 +70,7 @@ class UserController
             $this->userRepository->create($data);
             unset($data['password']);
 
-            return Response::json($data);
+            return Response::json($data, Response::HTTP_CREATED);
         } catch (Exception $error) {
             throw new Exception("Não foi possível criar o usuário.", Response::HTTP_BAD_REQUEST);
         }
