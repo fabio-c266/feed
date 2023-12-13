@@ -1,0 +1,50 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+}
+body form {
+  height: auto;
+  width: auto;
+  border-radius: 12px;
+  background-color: var(--grey-400);
+  padding: 14px 30px 28px;
+  display: flex;
+  gap: 22px;
+  flex-direction: column;
+}
+body form .title {
+  text-align: center;
+  font-weight: 800;
+}
+body form input {
+  background-color: var(--grey-300);
+  border: 1px solid var(--white);
+  border-radius: 12px;
+  padding: 6px 10px;
+  color: var(--white);
+  height: 34px;
+  width: 250px;
+}
+body form .password-container {
+  display: flex;
+  justify-content: space-between;
+}
+body form .password-container input {
+  height: 34px;
+  width: 120px;
+}
+body form button {
+  cursor: pointer;
+  height: 34px;
+  background-color: var(--green-500);
+  border: 0;
+  border-radius: 8px;
+  color: var(--white);
+  font-weight: 500;
+  transition: 0.2s;
+}
+body form button:hover {
+  background-color: var(--green-400);
+}/*# sourceMappingURL=form.css.map */
