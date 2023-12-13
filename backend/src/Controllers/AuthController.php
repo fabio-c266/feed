@@ -37,7 +37,7 @@ class AuthController
         $isValidPassword = password_verify($body['password'], $user['password']);
 
         if (!$isValidPassword) {
-            throw new Exception("Invalid Credentials.", Response::HTTP_UNAUTHORIZED);
+            throw new Exception("Login ou senha inválidos.", Response::HTTP_UNAUTHORIZED);
         }
 
         $data =  [
