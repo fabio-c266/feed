@@ -6,12 +6,15 @@ use Exception;
 use src\core\Response;
 use src\core\UUID;
 use src\helpers\ValidationsHelper;
+use src\repositories\ImageRepository;
 use src\repositories\UserRepository;
 
 class UserController
 {
-    public function __construct(private readonly UserRepository $userRepository)
-    {
+    public function __construct(
+        private readonly UserRepository $userRepository,
+        private readonly ImageRepository $imageRepository
+    ) {
     }
 
     public function create($req)
@@ -120,15 +123,46 @@ class UserController
 
             try {
                 $this->userRepository->update($jwtData->id, 'username', $username);
-                $newUserData = $this->userRepository->findOne($jwtData->id);
-
-                return Response::json($newUserData);
             } catch (Exception $execpt) {
                 throw new Exception("Não foi possível alterar o username.", Response::HTTP_BAD_REQUEST);
             }
         }
 
         if ($image_id) {
+            $image = $this->imageRepository->findOne($image_id);
+
+            if (!$image) {
+                throw new Exception("Imagem inválida.", Response::HTTP_BAD_REQUEST);
+            }
+
+            $user = $this->userRepository->findOne($jwtData->id);
+
+            if (!$user) {
+                throw new Exception("Usuário inválido", Response::HTTP_BAD_REQUEST);
+            }
+
+            if ($image_id === $user['image_id']) {
+                throw new Exception("O usuário já possui essa imagem de perfil.", Response::HTTP_BAD_REQUEST);
+            }
+
+            try {
+                $this->userRepository->update($jwtData->id, 'image_id', $image_id);
+
+                if ($user['image_id']) {
+                    $this->imageRepository->delete($image['id']);
+                    $imageToDeletePath = "./uploads/{$image['new_name']}";
+
+                    if (file_exists($imageToDeletePath)) {
+                        unlink($imageToDeletePath);
+                    }
+                }
+            } catch (Exception $execpt) {
+                print($execpt->getMessage());
+                throw new Exception("Não foi possível alterar a imagem.", Response::HTTP_BAD_REQUEST);
+            }
         }
+
+        $newUserData = $this->userRepository->findOne($jwtData->id);
+        return Response::json($newUserData);
     }
 }

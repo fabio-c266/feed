@@ -28,4 +28,14 @@ class ImageRepository
         $image = Database::query($queryContent);
         return $image ? $image[0] : null;
     }
+
+    public function delete(string $id)
+    {
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->delete()
+            ->where('id', $id)
+            ->build();
+
+        Database::query($queryContent);
+    }
 }
