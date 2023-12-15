@@ -11,8 +11,9 @@ use src\repositories\ImageRepository;
 
 class ImageController
 {
-    public function __construct(private readonly ImageRepository $imageRepository)
-    {
+    public function __construct(
+        private readonly ImageRepository $imageRepository
+    ) {
     }
 
     public function upload($req)

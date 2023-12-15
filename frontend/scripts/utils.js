@@ -1,7 +1,24 @@
+function toggleHeaderMenu() {
+    document.querySelector('.menu').classList.toggle('active');
+}
+
+function signOut() {
+    localStorage.removeItem('token');
+    window.location.href = '/index.html';
+}
+
+function moveToProfilePage() {
+    window.location.href = '/profile.html';
+}
+
+function moveToHomePage() {
+    window.location.href = '/posts.html';
+}
+
 function toostify(type, text) {
     const types = {
         'error': 'red',
-        'success': 'greeen'
+        'success': 'green'
     }
 
     Toastify({

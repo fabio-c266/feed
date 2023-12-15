@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed | Perfil</title>
+    <link rel="stylesheet" href="styles/css/global.css">
+    <link rel="stylesheet" href="styles/css/profile.page.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="title" onclick="moveToHomePage()">
+            FEED
+        </h1>
+    </header>
+
+    <main>
+        <form id="profile-form">
+            <div class="image-container">
+                <img src="/assets/loading.gif" class="avatar" alt="">
+                <input type="file" id="upload-field" hidden>
+            </div>
+
+            <div class="field">
+                <label for="username">
+                    <ion-icon name="person-outline"></ion-icon>
+                    Username
+                </label>
+                <input type="text" name="username" id="username-input">
+            </div>
+
+            <div class="field">
+                <label for="email">
+                    <ion-icon name="at-outline"></ion-icon>
+                    Email
+                </label>
+                <input type="text" name="email" id="email-input" disabled>
+            </div>
+
+            <button type="submit">
+                Salvar
+            </button>
+        </form>
+    </main>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/services/user.js"></script>
+    <script src="scripts/services/image.js"></script>
+    <script src="scripts/profile.js"></script>
+</body>
+
+</html>

@@ -49,6 +49,12 @@ class Query
         return $this;
     }
 
+    public function limit(int $limit)
+    {
+        $this->queryContent = $this->queryContent . " LIMIT {$limit}";
+        return $this;
+    }
+
     public function build()
     {
         return $this->queryContent;

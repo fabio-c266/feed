@@ -40,7 +40,7 @@ loginForm?.addEventListener('submit', async (event) => {
         localStorage.setItem('token', data.token);
         window.location.href = '/posts.html';
     } catch (error) {
-        return toostify('error', 'Ocorreu um erro no sistema. Tente novament em instantes.');
+        return toostify('error', 'Ocorreu um erro no sistema. Tente novamente em instantes.');
     }
 })
 
@@ -93,6 +93,6 @@ registerForm?.addEventListener('submit', async (event) => {
 
         window.location.href = '/index.html';
     } catch (error) {
-        return toostify('error', 'Ocorreu um erro no sistema. Tente novament em instantes.');
+        return toostify('error', 'Ocorreu um erro no sistema. Tente novamente em instantes.');
     }
 })

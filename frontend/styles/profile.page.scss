@@ -1,0 +1,78 @@
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 80vh;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 100%;
+
+    cursor: pointer;
+}
+
+#profile-form {
+    color: var(--white);
+    width: fit-content;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+    background-color: var(--grey-400);
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input {
+            background-color: var(--grey-300);
+            border: 1px solid var(--white);
+            border-radius: 12px;
+            padding: 6px 10px;
+            color: var(--white);
+
+            height: 34px;
+            width: 250px;
+
+            &:disabled {
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    button {
+        margin-top: 14px;
+        cursor: pointer;
+        height: 34px;
+        background-color: var(--green-500);
+
+        border: 0;
+        border-radius: 8px;
+        color: var(--white);
+        font-weight: 500;
+        transition: 0.2s;
+
+        &:hover {
+            background-color: var(--green-400);
+        }
+    }
+}

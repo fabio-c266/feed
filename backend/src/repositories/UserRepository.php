@@ -56,6 +56,18 @@ class UserRepository
         $queryContent = (new Query(tableName: $this->tableName))
             ->update($column, $data)
             ->where('id', $id)
+            ->limit(1)
+            ->build();
+
+        Database::query($queryContent);
+    }
+
+    public function delete(string $id): void
+    {
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->delete()
+            ->where('id', $id)
+            ->limit(1)
             ->build();
 
         Database::query($queryContent);

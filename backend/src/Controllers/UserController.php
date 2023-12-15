@@ -8,6 +8,7 @@ use src\core\UUID;
 use src\helpers\ValidationsHelper;
 use src\repositories\ImageRepository;
 use src\repositories\UserRepository;
+use src\services\UserService;
 
 class UserController
 {
@@ -29,50 +30,9 @@ class UserController
 
         try {
             ValidationsHelper::schema(schema: $bodySchema, data: $body);
+            return (new UserService($this->userRepository))->create($body);
         } catch (Exception $execpt) {
-            throw new Exception($execpt->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $username = $body['username'];
-
-        if (strlen($username) > 19) {
-            throw new Exception("O username não pode ser maior que 19 caracteris.", Response::HTTP_BAD_REQUEST);
-        }
-
-        $email = strtolower(trim($body['email']));
-
-        if ($this->userRepository->findByUsername($username)) {
-            throw new Exception("Já existe um usuário com esse username.", Response::HTTP_CONFLICT);
-        }
-
-        if ($this->userRepository->findUserByEmail($email)) {
-            throw new Exception("Já existe um usuário com esse email.", Response::HTTP_CONFLICT);
-        }
-
-        $password = $body['password'];
-        $passwordRegex = '/^(?=.*\d).{8,}$/';
-
-        if (!preg_match($passwordRegex, $password)) {
-            throw new Exception("A senha deve ter no mínimo 8 caracteris e por o 1 menos um número.", Response::HTTP_BAD_REQUEST);
-        }
-
-        $passwordHashed = password_hash($password, PASSWORD_BCRYPT, ["cost" => 6]);
-
-        $data = [
-            "id" => UUID::generate(),
-            "username" => $username,
-            "email" => $email,
-            "password" => $passwordHashed,
-            "image_id" => null
-        ];
-
-        try {
-            $this->userRepository->create($data);
-            unset($data['password']);
-
-            return Response::json($data, Response::HTTP_CREATED);
-        } catch (Exception $error) {
-            throw new Exception("Não foi possível criar o usuário.", Response::HTTP_BAD_REQUEST);
+            throw new Exception($execpt->getMessage(), $execpt->getCode() === 0 ? Response::HTTP_BAD_REQUEST : $execpt->getCode());
         }
     }
 
@@ -81,13 +41,11 @@ class UserController
         $jwt = $req['jwt_data'];
         $jwtData = $jwt->data;
 
-        $user = $this->userRepository->findOne($jwtData->id);
-
-        if (!$user) {
-            throw new Exception("Não foi possível buscar suas informações.", Response::HTTP_BAD_REQUEST);
+        try {
+            return (new UserService($this->userRepository))->get($jwtData->id);
+        } catch (Exception $execpt) {
+            throw new Exception($execpt->getMessage(), $execpt->getCode() === 0 ? Response::HTTP_BAD_REQUEST : $execpt->getCode());
         }
-
-        return Response::json($user);
     }
 
     public function update($req)
@@ -146,15 +104,20 @@ class UserController
             }
 
             try {
-                $this->userRepository->update($jwtData->id, 'image_id', $image_id);
-
                 if ($user['image_id']) {
+                    $currentUserImage = $this->imageRepository->findOne($user['image_id']);
+
+                    $this->imageRepository->update($currentUserImage['id'], 'original_name', $image['original_name']);
+                    $this->imageRepository->update($currentUserImage['id'], 'new_name', $image['new_name']);
+
                     $this->imageRepository->delete($image['id']);
-                    $imageToDeletePath = "./uploads/{$image['new_name']}";
+                    $imageToDeletePath = "./uploads/{$currentUserImage['new_name']}";
 
                     if (file_exists($imageToDeletePath)) {
                         unlink($imageToDeletePath);
                     }
+                } else {
+                    $this->userRepository->update($user['id'], 'image_id', $image_id);
                 }
             } catch (Exception $execpt) {
                 print($execpt->getMessage());

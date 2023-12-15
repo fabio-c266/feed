@@ -3,6 +3,7 @@
 :root {
     --grey-300: #222;
     --grey-400: #333;
+    --grey-500: #444;
 
     --green-500: #73840A;
     --green-400: #8ca103;
@@ -28,4 +29,20 @@ textarea {
 body {
     background-color: var(--grey-300);
     min-height: 100vh;
+}
+
+.title {
+    color: var(--white);
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+header {
+    height: 100px;
+    background-color: var(--grey-400);
+    padding: 10px 40px;
+
+    display: flex;
+    align-items: center;
 }
