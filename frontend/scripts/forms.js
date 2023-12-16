@@ -1,8 +1,6 @@
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 
-const baseUrl = 'http://localhost:8000'
-
 loginForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
 

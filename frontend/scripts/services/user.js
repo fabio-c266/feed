@@ -1,5 +1,3 @@
-const baseUrl = 'http://localhost:8000'
-
 async function getUser() {
     const token = localStorage.getItem('token')
 

@@ -1,3 +1,5 @@
+const baseUrl = 'http://localhost:8000'
+
 function toggleHeaderMenu() {
     document.querySelector('.menu').classList.toggle('active');
 }
