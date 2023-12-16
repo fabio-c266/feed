@@ -66,11 +66,7 @@ class Routes
             throw new Exception("The class {$controllerName} not exists in file {$controllerName}.php");
         }
 
-        $classReflection = new ReflectionClass($class);
-        $classConstructor = $classReflection->getConstructor();
-        $constructArgs = File::resolveClassConstructorDependencies($classConstructor);
-
-        $classInstance = new $class(...$constructArgs);
+        $classInstance = new $class();
 
         if (!method_exists($classInstance, $controllerMethod)) {
             throw new Exception("The method {$controllerMethod} not exists in class {$controllerName}.");

@@ -28,16 +28,16 @@ class AuthService
             throw new Exception("Login ou senha inválidos.", Response::HTTP_UNAUTHORIZED);
         }
 
-        $data =  [
-            "id" => $user['id'],
+        $userData =  [
+            "id_public" => $user['id_public'],
             "email" => $user['email']
         ];
 
-        $token = JWT::generate($data);
-        $data = [
+        $token = JWT::generate($userData);
+        $responsedDta = [
             "token" => $token,
         ];
 
-        return Response::json($data);
+        return Response::json($responsedDta);
     }
 }

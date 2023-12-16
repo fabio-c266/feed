@@ -20,7 +20,7 @@ class Env
         try {
             ValidationsHelper::schema(schema: $envSchema, data: $_ENV);
         } catch (Exception $execpt) {
-            exit("Invalid invoriments variables becausa: \n\n{$execpt->getMessage()}");
+            exit("Invalid environments variables because: \n\n{$execpt->getMessage()}");
         }
     }
 }

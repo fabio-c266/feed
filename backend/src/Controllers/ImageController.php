@@ -8,14 +8,10 @@ use src\core\UUID;
 use src\helpers\ValidationsHelper;
 use src\helpers\StringHelper;
 use src\repositories\ImageRepository;
+use src\Services\ImageService;
 
 class ImageController
 {
-    public function __construct(
-        private readonly ImageRepository $imageRepository
-    ) {
-    }
-
     public function upload($req)
     {
         $files = $req['files'];
@@ -24,37 +20,10 @@ class ImageController
             throw new Exception('É necessário por o menos um arquivo.', Response::HTTP_BAD_REQUEST);
         }
 
-        $file = array_values($files)[0];
-        if (!isset($file['name']) || !str_contains($file['name'], '.')) {
-            throw new Exception('Formato de arquivo inválido.', Response::HTTP_BAD_REQUEST);
-        }
-
-        if (!StringHelper::allowImageType($file['type'])) {
-            throw new Exception('A imagem deve ser do formato jpg ou png.', Response::HTTP_BAD_REQUEST);
-        }
-
-        [, $extension] = explode('.', $file['name']);
-        $newNameUUID = UUID::generate();
-        $fileNewName = "{$newNameUUID}.{$extension}";
-
-        $data = [
-            "id" => UUID::generate(),
-            "original_name" => $file['name'],
-            "new_name" => $fileNewName
-        ];
-
         try {
-            $this->imageRepository->create($data);
-
-            $destination_path = getcwd() . DIRECTORY_SEPARATOR . '\uploads\\';
-            $target_path = $destination_path . basename($fileNewName);
-            @move_uploaded_file($file['tmp_name'], $target_path);
-
-            $image = $this->imageRepository->findOne($data['id']);
-
-            return Response::json($image, Response::HTTP_CREATED);
+            return (new ImageService(new ImageRepository()))->upload(array_values($files)[0]);
         } catch (Exception $execpt) {
-            throw new Exception("Não foi possível criar a imagem.", Response::HTTP_BAD_REQUEST);
+            throw new Exception($execpt->getMessage(), $execpt->getCode() === 0 ? Response::HTTP_BAD_REQUEST : $execpt->getCode());
         }
     }
 
@@ -62,28 +31,18 @@ class ImageController
     {
         $queryParaments = $req['query'];
         $queryParamentsSchema = [
-            "id" => 'string | required'
+            "name" => 'string | required'
         ];
 
         try {
             ValidationsHelper::schema(schema: $queryParamentsSchema, data: $queryParaments);
+            return (new ImageService(new ImageRepository()))->get($queryParaments['name']);
         } catch (Exception $execpt) {
             throw new Exception($execpt->getMessage(), Response::HTTP_BAD_REQUEST);
         }
+    }
 
-        $id = $queryParaments['id'];
-        $image = $this->imageRepository->findOne($id);
-
-        if (!$image) {
-            throw new Exception("Imagem inválida.", Response::HTTP_BAD_REQUEST);
-        }
-
-        $filePath = "uploads/{$image['new_name']}";
-
-        if (!file_exists($filePath)) {
-            throw new Exception("Infelizmente essa imagem foi deletada.", Response::HTTP_BAD_REQUEST);
-        }
-
-        return Response::image($filePath);
+    public function delete($req)
+    {
     }
 }

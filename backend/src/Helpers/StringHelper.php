@@ -4,7 +4,7 @@ namespace src\helpers;
 
 class StringHelper
 {
-    public static function ArrayToQueryValues(array $params): string
+    public static function arrayToQueryValues(array $params): string
     {
         $formattedParams = array_map(function ($value) {
             if ($value === null) {
@@ -17,6 +17,17 @@ class StringHelper
         return implode(', ', $formattedParams);
     }
 
+    public static function arrayToUpdateValues(array $data): string
+    {
+        $values = array_map(function ($column) use ($data) {
+            $value = $data[$column];
+
+            return "{$column} = '{$value}'";
+        }, array_keys($data));
+
+        return implode(', ', $values);
+    }
+
     public static function trim(string $string): string
     {
         return str_replace(' ', '', $string);
@@ -27,7 +38,8 @@ class StringHelper
         return $arr;
     }
 
-    public static function allowImageType(string $name): bool {
+    public static function allowImageType(string $name): bool
+    {
         $extensions = ['image/png', 'image/jpeg'];
         $isValidImageFormat = false;
 

@@ -11,11 +11,6 @@ use src\services\AuthService;
 
 class AuthController
 {
-    public function __construct(
-        private readonly UserRepository $userRepository
-    ) {
-    }
-
     public function login($req)
     {
         $body = $req['body'];
@@ -26,7 +21,7 @@ class AuthController
 
         try {
             ValidationsHelper::schema(schema: $bodySchema, data: $body);
-            return (new AuthService($this->userRepository))->login($body);
+            return (new AuthService(new UserRepository()))->login($body);
         } catch (Exception $execpt) {
             throw new Exception($execpt->getMessage(), Response::HTTP_BAD_REQUEST);
         }

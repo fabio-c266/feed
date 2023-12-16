@@ -10,12 +10,7 @@ class File
     public static function executeClass(string $fileName, string $classMethod, array $methodParams)
     {
         $class = "src\\Controllers\\{$fileName}";
-
-        $classReflection = new ReflectionClass($class);
-        $classConstructor = $classReflection->getConstructor();
-        $constructArgs = self::resolveClassConstructorDependencies($classConstructor);
-
-        $classInstance = new $class(...$constructArgs);
+        $classInstance = new $class();
 
         echo call_user_func([$classInstance, $classMethod], ...$methodParams);
     }

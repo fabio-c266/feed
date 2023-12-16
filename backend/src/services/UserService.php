@@ -18,7 +18,7 @@ class UserService
     {
         $username = $data['username'];
 
-        if (strlen($username) > 19) {
+        if (strlen($username) > 16) {
             throw new Exception("O username não pode ser maior que 19 caracteris.", Response::HTTP_BAD_REQUEST);
         }
 
@@ -41,17 +41,16 @@ class UserService
 
         $passwordHashed = password_hash($password, PASSWORD_BCRYPT, ["cost" => 6]);
 
-        $data = [
-            "id" => UUID::generate(),
+        $userData = [
+            "id_public" => UUID::generate(),
             "username" => $username,
             "email" => $email,
-            "password" => $passwordHashed,
-            "image_id" => null
+            "password" => $passwordHashed
         ];
 
         try {
-            $this->userRepository->create($data);
-            unset($data['password']);
+            $this->userRepository->create($userData);
+            unset($userData['password']);
 
             return Response::json($data, Response::HTTP_CREATED);
         } catch (Exception $error) {
@@ -59,9 +58,9 @@ class UserService
         }
     }
 
-    public function get(string $id)
+    public function get(string $idPublic)
     {
-        $user = $this->userRepository->findOne($id);
+        $user = $this->userRepository->findOne($idPublic);
 
         if (!$user) {
             throw new Exception("Não foi possível buscar suas informações.", Response::HTTP_BAD_REQUEST);
@@ -70,19 +69,29 @@ class UserService
         return Response::json($user);
     }
 
-    public function update(string $id, array $data)
-    {
-    }
-
-    public function delete(string $id)
+    public function update(string $idPublic, array $data)
     {
         try {
-            $user = $this->get($id);
-            $this->userRepository->delete($user['id']);
+            $this->get($idPublic);
+            $this->userRepository->update($idPublic, $data);
+
+            $newUserdata = $this->userRepository->findOne($idPublic);
+
+            return Response::json($newUserdata, Response::HTTP_OK);
+        } catch (Exception $except) {
+            throw new Exception($except->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function delete(string $idPublic)
+    {
+        try {
+            $user = $this->get($idPublic);
+            $this->userRepository->delete($user['id_public']);
 
             return Response::status(Response::HTTP_OK);
-        } catch (Exception $error) {
-            throw new Exception($error->getMessage(), Response::HTTP_BAD_REQUEST);
+        } catch (Exception $except) {
+            throw new Exception($except->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 }

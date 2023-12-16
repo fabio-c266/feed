@@ -18,13 +18,13 @@ class Query
     {
         $columns = !$columns ? '*' : implode(',', $columns);
 
-        $this->queryContent  = $this->queryContent . " SELECT {$columns} from {$this->tableName}";
+        $this->queryContent  = $this->queryContent . "SELECT {$columns} from {$this->tableName} ";
         return $this;
     }
 
     public function where(string $column, string $value, string $action = '=')
     {
-        $this->queryContent = $this->queryContent . " WHERE {$column} {$action} '{$value}'";
+        $this->queryContent = $this->queryContent . "WHERE {$column} {$action} '{$value}' ";
         return $this;
     }
 
@@ -33,25 +33,27 @@ class Query
         $columnsJoined = implode(", ", $columns);
         $values = StringHelper::ArrayToQueryValues($data);
 
-        $this->queryContent = $this->queryContent . " INSERT INTO {$this->tableName} ({$columnsJoined}) VALUES ({$values})";
+        $this->queryContent = $this->queryContent . "INSERT INTO {$this->tableName} ({$columnsJoined}) VALUES ({$values}) ";
         return $this;
     }
 
-    public function update(string $column, $data)
+    public function update(array $data)
     {
-        $this->queryContent = $this->queryContent . " UPDATE {$this->tableName} SET {$column} = '{$data}'";
+        $updateValues = StringHelper::arrayToUpdateValues($data);
+
+        $this->queryContent = $this->queryContent . "UPDATE {$this->tableName} SET {$updateValues} ";
         return $this;
     }
 
     public function delete()
     {
-        $this->queryContent = $this->queryContent . " DELETE FROM {$this->tableName}";
+        $this->queryContent = $this->queryContent . "DELETE FROM {$this->tableName} ";
         return $this;
     }
 
     public function limit(int $limit)
     {
-        $this->queryContent = $this->queryContent . " LIMIT {$limit}";
+        $this->queryContent = $this->queryContent . "LIMIT {$limit} ";
         return $this;
     }
 
