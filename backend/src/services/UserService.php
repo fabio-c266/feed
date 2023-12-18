@@ -52,8 +52,8 @@ class UserService
             $this->userRepository->create($userData);
             unset($userData['password']);
 
-            return Response::json($data, Response::HTTP_CREATED);
-        } catch (Exception $error) {
+            return $data;
+        } catch (Exception) {
             throw new Exception("Não foi possível criar o usuário.", Response::HTTP_BAD_REQUEST);
         }
     }
@@ -66,30 +66,48 @@ class UserService
             throw new Exception("Não foi possível buscar suas informações.", Response::HTTP_BAD_REQUEST);
         }
 
-        return Response::json($user);
+        return $user;
     }
 
     public function update(string $idPublic, array $data)
     {
         try {
-            $this->get($idPublic);
+            $user = $this->get($idPublic);
+
+            $newUsername = $data['username'] ?? null;
+            $avatarName = $data['avatar_name'] ?? null;
+
+            if (!$newUsername && !$avatarName) {
+                throw new Exception("É necessário no mínimo um dado para ser atualizado.");
+            }
+
+            if ($newUsername) {
+                if ($user['username'] === $newUsername) {
+                    throw new Exception("Você não pode alterar para o mesmo nome de usuário.");
+                }
+
+                $someUsingUsername = $this->userRepository->findByUsername($newUsername);
+
+                if ($someUsingUsername) {
+                    throw new Exception("Já existe alguém com esse nome de usuário.");
+                }
+            }
+
+            if ($avatarName) {
+                if (!file_exists("./uploads/{$avatarName}")) {
+                    throw new Exception("Imagem inválida.");
+                }
+
+                if ($this->userRepository->findWhere('avatar_name', $avatarName)) {
+                    throw new Exception("Já possui um usuário com esse avatar.");
+                }
+            }
+
             $this->userRepository->update($idPublic, $data);
 
             $newUserdata = $this->userRepository->findOne($idPublic);
 
-            return Response::json($newUserdata, Response::HTTP_OK);
-        } catch (Exception $except) {
-            throw new Exception($except->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    public function delete(string $idPublic)
-    {
-        try {
-            $user = $this->get($idPublic);
-            $this->userRepository->delete($user['id_public']);
-
-            return Response::status(Response::HTTP_OK);
+            return $newUserdata;
         } catch (Exception $except) {
             throw new Exception($except->getMessage(), Response::HTTP_BAD_REQUEST);
         }

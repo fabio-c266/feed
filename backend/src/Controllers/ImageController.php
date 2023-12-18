@@ -4,10 +4,7 @@ namespace src\controllers;
 
 use Exception;
 use src\core\Response;
-use src\core\UUID;
-use src\helpers\ValidationsHelper;
-use src\helpers\StringHelper;
-use src\repositories\ImageRepository;
+use src\core\Schema;
 use src\Services\ImageService;
 
 class ImageController
@@ -21,7 +18,8 @@ class ImageController
         }
 
         try {
-            return (new ImageService(new ImageRepository()))->upload(array_values($files)[0]);
+            $responseData = (new ImageService())->upload(array_values($files)[0]);
+            return Response::json($responseData, Response::HTTP_CREATED);
         } catch (Exception $execpt) {
             throw new Exception($execpt->getMessage(), $execpt->getCode() === 0 ? Response::HTTP_BAD_REQUEST : $execpt->getCode());
         }
@@ -29,20 +27,17 @@ class ImageController
 
     public function get($req)
     {
-        $queryParaments = $req['query'];
         $queryParamentsSchema = [
-            "name" => 'string | required'
+            "name" => ['string', 'required']
         ];
 
         try {
-            ValidationsHelper::schema(schema: $queryParamentsSchema, data: $queryParaments);
-            return (new ImageService(new ImageRepository()))->get($queryParaments['name']);
+            $data = (new Schema())->validate(schema: $queryParamentsSchema, data: $req['query']);
+            $imagePath = (new ImageService())->getImagePath($data['name']);
+
+            return Response::image($imagePath);
         } catch (Exception $execpt) {
             throw new Exception($execpt->getMessage(), Response::HTTP_BAD_REQUEST);
         }
-    }
-
-    public function delete($req)
-    {
     }
 }

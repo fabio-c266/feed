@@ -25,6 +25,11 @@ class Routes
         self::save_router('PUT', $endpoint, $controller, $requireAuth);
     }
 
+    public static function patch($endpoint, $controller, $requireAuth = false): void
+    {
+        self::save_router('PATCH', $endpoint, $controller, $requireAuth);
+    }
+
     public static function delete($endpoint, $controller, $requireAuth = false): void
     {
         self::save_router('DELETE', $endpoint, $controller, $requireAuth);

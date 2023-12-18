@@ -40,10 +40,21 @@ class UserRepository
         return $user ? $user[0] : null;
     }
 
+    public function findWhere(string $column, $value): array | null
+    {
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->select(['id_public'])
+            ->where($column, $value)
+            ->build();
+
+        $user = Database::query($queryContent);
+        return $user ? $user[0] : null;
+    }
+
     public function findOne(string $idPublic): array | null
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id_public', 'username', 'email', 'image', 'created_at'])
+            ->select(['id_public', 'username', 'email', 'avatar_name', 'created_at'])
             ->where('id_public', $idPublic)
             ->build();
 

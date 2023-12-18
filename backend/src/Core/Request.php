@@ -15,24 +15,19 @@ class Request
     {
         BroswerCore::resolve($server);
 
-        $endpoint = $server['REQUEST_URI'];
+        $uri = $server['REQUEST_URI'];
         $httpMethod = $server['REQUEST_METHOD'];
 
-        if ($endpoint[strlen($endpoint) - 1] === '/') {
-            $endpoint = substr($endpoint, 0, strlen($endpoint) - 1);
+        if ($uri !== '/' && substr($uri, -1) === '/') {
+            $uri = rtrim($uri, '/');
         }
 
-        $parsed_url = parse_url($endpoint);
-        $endpoint = $parsed_url['path'];
-
-        $route = Routes::get_route($httpMethod, $endpoint);
+        $uriData = parse_url($uri);
+        $routeUri = $uriData['path'];
+        $route = Routes::get_route($httpMethod, $routeUri);
 
         if (!$route) {
-            $data = [
-                "messsage" => "Router not found"
-            ];
-
-            echo Response::json($data, Response::HTTP_NOT_FOUND);
+            echo Response::json(["messsage" => "Router not found"], Response::HTTP_NOT_FOUND);
             return;
         }
 
@@ -60,16 +55,12 @@ class Request
                 $body = json_decode(file_get_contents('php://input'), true);
                 $server['body'] = $body ?? [];
             }
-
-            $server['query'] = StringHelper::getQueryParams($parsed_url['query'] ?? '');
+            
+            $server['query'] = StringHelper::getQueryParams($uriData['query'] ?? '');
 
             echo File::executeClass(fileName: $route->controllerName, classMethod: $route->controllerMethod, methodParams: [$server]);
         } catch (Exception $except) {
-            $data = [
-                "message" => $except->getMessage(),
-            ];
-
-            echo Response::json($data, $except->getCode());
+            echo Response::json(["message" => $except->getMessage()], $except->getCode());
         }
     }
 }

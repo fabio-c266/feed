@@ -34,10 +34,7 @@ class AuthService
         ];
 
         $token = JWT::generate($userData);
-        $responsedDta = [
-            "token" => $token,
-        ];
 
-        return Response::json($responsedDta);
+        return (["token" => $token]);
     }
 }

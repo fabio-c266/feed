@@ -10,11 +10,6 @@ use src\repositories\ImageRepository;
 
 class ImageService
 {
-    public function __construct(
-        private readonly ImageRepository $imageRepository,
-    ) {
-    }
-
     public function upload($file)
     {
         if (!isset($file['name']) || !str_contains($file['name'], '.')) {
@@ -34,17 +29,13 @@ class ImageService
             $target_path = $destination_path . basename($newImageName);
             @move_uploaded_file($file['tmp_name'], $target_path);
 
-            $responseData = [
-                'name' => $newImageName
-            ];
-
-            return Response::json($responseData, Response::HTTP_CREATED);
+            return (['name' => $newImageName]);
         } catch (Exception $except) {
             throw new Exception("Não foi possível criar o usuário.", Response::HTTP_BAD_REQUEST);
         }
     }
 
-    public function get(string $imageName)
+    public function getImagePath(string $imageName)
     {
         $filePath = "uploads/{$imageName}";
 
@@ -52,6 +43,6 @@ class ImageService
             throw new Exception("Imagem inválida.", Response::HTTP_BAD_REQUEST);
         }
 
-        return Response::image($filePath);
+        return $filePath;
     }
 }
