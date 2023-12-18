@@ -11,7 +11,7 @@ getUser().then(userData => {
 
     if (!userData) return;
 
-    const avatarUrl = userData.image_id === null ? 'assets/default-avatar.png' : `${baseUrl}/images?id=${userData.image_id}`
+    const avatarUrl = userData.avatar_name === null ? 'assets/default-avatar.png' : `${baseUrl}/images?name=${userData.avatar_name}`
     avatarElement.src = avatarUrl;
 
     usernameInput.value = userData.username
@@ -44,7 +44,7 @@ profileForm.addEventListener('submit', async (event) => {
         const imageUploaded = await uploadImage(formData);
         if (!imageUploaded) return;
 
-        userData.image_id = imageUploaded.id
+        userData.avatar_name = imageUploaded.name
     }
 
     if (username !== user.username) {
