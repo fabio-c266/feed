@@ -9,11 +9,30 @@ header {
         align-items: center;
         width: 100%;
 
+        .right-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+
+            .add-post-btn {
+                color: var(--white);
+                font-weight: 500;
+                font-size: 1rem;
+                padding: 8px;
+                border: 0;
+                border-radius: 10px;
+                background-color: var(--green-400);
+
+                transition: 0.2s;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--green-500);
+                }
+            }
+        }
+
         .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 100%;
-            object-fit: cover;
             cursor: pointer;
         }
 
@@ -75,6 +94,48 @@ header {
                     opacity: 0.9;
                 }
             }
+        }
+    }
+}
+
+#posts {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 60px;
+    margin: 40px 0;
+
+    .post {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        border-radius: 12px;
+        background-color: var(--grey-500);
+        width: 30%;
+
+        .post-start {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .user-infos {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .post-created-at {
+                opacity: 0.4;
+                margin-bottom: 0.2rem;
+            }
+        }
+
+        img.post-image {
+            border-radius: 8px;
+            max-height: 400px;
+            width: 100%;
+            object-fit: cover;
         }
     }
 }

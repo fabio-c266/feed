@@ -1,0 +1,131 @@
+.shadow {
+    display: none;
+
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    z-index: 20;
+    overflow-x: hidden;
+
+    background-color: #000;
+    opacity: 0.6;
+
+    &.active {
+        display: block;
+    }
+}
+
+#add-post-modal {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 450px;
+
+    position: absolute;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 8px;
+
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30;
+    background-color: var(--grey-500);
+    animation: fadein .5s;
+
+    @keyframes fadein {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .start {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .close-icon {
+            width: 36px;
+            height: 36px;
+
+            cursor: pointer;
+        }
+    }
+
+    .image-preview {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+
+        height: 180px;
+
+        border: 1px solid var(--white);
+        border-style: dashed;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+
+        img {
+            top: -2px;
+            position: absolute;
+            width: 358px;
+            height: 182px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .image-icon {
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    textarea {
+        color: var(--white);
+        margin: 20px 0;
+        border: 1px solid var(--white);
+        border-radius: 12px;
+        padding: 12px;
+        width: 100%;
+        height: 160px;
+        resize: none;
+        background-color: var(--grey-500);
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+
+        justify-content: space-between;
+
+        button {
+            color: var(--white);
+            padding: 8px;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            background-color: red;
+
+            &:hover {
+                opacity: 0.8;
+            }
+
+            &[type='submit'] {
+                background-color: var(--green-400);
+            }
+        }
+    }
+
+    &.open {
+        display: block;
+    }
+}

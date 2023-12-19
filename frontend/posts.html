@@ -7,36 +7,70 @@
     <title>Feed | Posts</title>
     <link rel="stylesheet" href="styles/css/global.css">
     <link rel="stylesheet" href="styles/css/posts.page.css">
+    <link rel="stylesheet" href="styles/css/modals.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
+    <div class="shadow"></div>
+
+    <div id="add-post-modal">
+        <form id="new-post-form">
+            <div class="start">
+                <h1 class="title">
+                    Adicionar Post
+                </h1>
+
+                <ion-icon name="close-outline" onclick="toggleOpenPostModal()" class="close-icon"></ion-icon>
+            </div>
+
+            <div class="image-preview">
+                <input type="file" id="new-post-image" accept="image/png, image/jpeg" hidden>
+                <ion-icon name="image-outline" class="image-icon"></ion-icon>
+                <img src="" alt="" style="visibility: hidden;">
+                <p>Clique aqui para fazer o upload de uma image.</p>
+            </div>
+
+            <textarea placeholder="Digite o contéudo desse post" id="new-feed-content"></textarea>
+
+            <div class="buttons">
+                <button type="submit">Enviar postagem</button>
+                <button type="button" class="remove-image-btn" onclick="clearPreviewImage()"
+                    style="visibility: hidden;">Remover imagem</button>
+            </div>
+        </form>
+    </div>
+
     <header>
         <div class="header-container">
             <h1 class="title" onclick="moveToHomePage()">
                 FEED
             </h1>
 
-            <img src="/assets/loading.gif" alt="Avatar" class="avatar" onclick="toggleHeaderMenu()">
-            <div class="menu">
-                <span class="menu-username"></span>
-                <ul>
-                    <button onclick="moveToProfilePage()">
-                        <ion-icon name="person-outline"></ion-icon>
-                        <span>Perfil</span>
-                    </button>
-                    <button onclick="signOut()">
-                        <ion-icon name="log-out-outline"></ion-icon>
-                        <span>Sair</span>
-                    </button>
-                </ul>
+            <div class="right-container">
+                <button class="add-post-btn" onclick="toggleOpenPostModal()">Adicionar Post</button>
+
+                <div>
+                    <img src="/assets/loading.gif" alt="Avatar" class="avatar" onclick="toggleHeaderMenu()">
+                    <div class="menu">
+                        <span class="menu-username"></span>
+                        <ul>
+                            <button onclick="moveToProfilePage()">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <span>Perfil</span>
+                            </button>
+                            <button onclick="signOut()">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                <span>Sair</span>
+                            </button>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <main>
-
-    </main>
+    <main id="posts"></main>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -44,6 +78,9 @@
 
     <script src="/scripts/utils.js"></script>
     <script src="scripts/services/user.js"></script>
+    <script src="scripts/services/image.js"></script>
+    <script src="scripts/services/post.js"></script>
+
     <script src="/scripts/posts.js"></script>
 </body>
 

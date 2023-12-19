@@ -11,6 +11,10 @@
     --white: #fff;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -29,6 +33,9 @@ textarea {
 body {
     background-color: var(--grey-300);
     min-height: 100vh;
+    position: relative;
+
+    padding-bottom: 20px;
 }
 
 .title {
@@ -45,4 +52,21 @@ header {
 
     display: flex;
     align-items: center;
+    transition: 0.2s;
+
+    &.sticky {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+
+        box-shadow: 2px #222;
+    }
+}
+
+img.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    object-fit: cover;
 }
