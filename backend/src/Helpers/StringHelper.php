@@ -32,9 +32,9 @@ class StringHelper
     {
         return str_replace(' ', '', $string);
     }
-    public static function getQueryParams(string $url): array
+    public static function getQueryParams(string $queryString): array
     {
-        parse_str($url, $arr);
+        parse_str($queryString, $arr);
         return $arr;
     }
 

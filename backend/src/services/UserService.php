@@ -52,7 +52,7 @@ class UserService
             $this->userRepository->create($userData);
             unset($userData['password']);
 
-            return $data;
+            return $userData;
         } catch (Exception) {
             throw new Exception("Não foi possível criar o usuário.", Response::HTTP_BAD_REQUEST);
         }
@@ -65,7 +65,7 @@ class UserService
         if (!$user) {
             throw new Exception("Não foi possível buscar suas informações.", Response::HTTP_BAD_REQUEST);
         }
-
+        
         return $user;
     }
 

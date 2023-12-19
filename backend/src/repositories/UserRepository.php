@@ -4,6 +4,7 @@ namespace src\repositories;
 
 use src\config\Database;
 use src\core\Query;
+use src\interface\IRepository;
 
 class UserRepository
 {
@@ -40,6 +41,17 @@ class UserRepository
         return $user ? $user[0] : null;
     }
 
+    public function findOne(string $idPublic): array | null
+    {
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->select(['id', 'id_public', 'username', 'email', 'avatar_name', 'created_at'])
+            ->where('id_public', $idPublic)
+            ->build();
+
+        $user = Database::query($queryContent);
+        return $user ? $user[0] : null;
+    }
+
     public function findWhere(string $column, $value): array | null
     {
         $queryContent = (new Query(tableName: $this->tableName))
@@ -47,19 +59,8 @@ class UserRepository
             ->where($column, $value)
             ->build();
 
-        $user = Database::query($queryContent);
-        return $user ? $user[0] : null;
-    }
-
-    public function findOne(string $idPublic): array | null
-    {
-        $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id_public', 'username', 'email', 'avatar_name', 'created_at'])
-            ->where('id_public', $idPublic)
-            ->build();
-
-        $user = Database::query($queryContent);
-        return $user ? $user[0] : null;
+        $data = Database::query($queryContent);
+        return $data ? $data[0] : null;
     }
 
     public function update(string $idPublic, array $data): void
@@ -71,6 +72,14 @@ class UserRepository
             ->build();
 
         Database::query($queryContent);
+    }
+
+    public function findMany(): array {
+        $queryContent = (new Query(tableName: $this->tableName))
+            ->select()
+            ->build();
+
+        return Database::query($queryContent);
     }
 
     public function delete(string $idPublic): void

@@ -57,7 +57,7 @@ class UserController
 
             return Response::json($responseData);
         } catch (Exception $execpt) {
-            throw new Exception($execpt->getMessage(), Response::HTTP_BAD_REQUEST);
+            throw new Exception($execpt->getMessage(), $execpt->getCode() === 0 ? Response::HTTP_BAD_REQUEST : $execpt->getCode());
         }
     }
 }

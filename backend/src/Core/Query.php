@@ -24,7 +24,7 @@ class Query
 
     public function where(string $column, string $value, string $action = '=')
     {
-        $this->queryContent = $this->queryContent . "WHERE {$column} {$action} '{$value}' ";
+        $this->queryContent = $this->queryContent . "WHERE {$this->tableName}.{$column} {$action} '{$value}' ";
         return $this;
     }
 
@@ -34,6 +34,18 @@ class Query
         $values = StringHelper::ArrayToQueryValues($data);
 
         $this->queryContent = $this->queryContent . "INSERT INTO {$this->tableName} ({$columnsJoined}) VALUES ({$values}) ";
+        return $this;
+    }
+
+    public function join(string $tableNameToJoin, array $keys)
+    {
+        $this->queryContent = $this->queryContent . "INNER JOIN {$tableNameToJoin} ON {$this->tableName}.{$keys[0]} = {$tableNameToJoin}.{$keys[1]} ";
+        return $this;
+    }
+
+    public function orderBy(string $column, string $by = 'DESC')
+    {
+        $this->queryContent = $this->queryContent . "ORDER BY {$this->tableName}.{$column} {$by}";
         return $this;
     }
 
