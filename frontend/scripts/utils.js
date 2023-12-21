@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.100.57:8000'
+const baseUrl = 'http://10.25.0.158:8000'
 
 window.onscroll = () => {
     const headerElement = document.querySelector('header');
@@ -69,3 +69,6 @@ function toostify(type, text) {
         },
     }).showToast();
 }
+
+//DISABLE RELOAD PAGE WHEN USING CONFIRM JS FUNCTION
+window.onbeforeunload = function () { };

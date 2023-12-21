@@ -112,7 +112,7 @@ header {
         padding: 20px;
         border-radius: 12px;
         background-color: var(--grey-500);
-        width: 30%;
+        width: 36%;
 
         .post-start {
             display: flex;
@@ -137,5 +137,49 @@ header {
             width: 100%;
             object-fit: cover;
         }
+    }
+}
+
+.post-footer {
+    display: flex;
+    gap: 10px;
+
+    div {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    ion-icon {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+
+        color: var(--white);
+    }
+
+    .heart-icon {
+        &.hearted {
+            background-color: red;
+        }
+    }
+}
+
+
+@media(max-width: 1225px) {
+    #posts {
+        .post {
+            width: 60%;
+        }
+    }
+}
+
+@media(max-width: 630px) {
+    #posts {
+        .post {
+            width: 100%;
+        }
+
+        margin: 40px 30px;
     }
 }

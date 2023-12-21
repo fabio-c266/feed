@@ -12,11 +12,11 @@
   display: block;
 }
 
-#add-post-modal {
+.modal {
   display: none;
   flex-direction: column;
   justify-content: center;
-  max-width: 450px;
+  max-width: 760px;
   position: absolute;
   height: -moz-fit-content;
   height: fit-content;
@@ -36,16 +36,51 @@
     opacity: 1;
   }
 }
-#add-post-modal .start {
+.modal .start {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-#add-post-modal .start .close-icon {
+.modal .start .close-icon {
   width: 36px;
   height: 36px;
   cursor: pointer;
 }
+.modal textarea {
+  color: var(--white);
+  margin: 20px 0;
+  border: 1px solid var(--white);
+  border-radius: 12px;
+  padding: 12px;
+  width: 100%;
+  height: 160px;
+  resize: none;
+  background-color: var(--grey-500);
+}
+.modal .buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal button {
+  color: var(--white);
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: red;
+}
+.modal button:hover {
+  opacity: 0.8;
+}
+.modal button[type=submit] {
+  background-color: var(--green-400);
+}
+.modal.open {
+  display: block;
+}
+
 #add-post-modal .image-preview {
   margin-top: 20px;
   display: flex;
@@ -63,7 +98,7 @@
 #add-post-modal .image-preview img {
   top: -2px;
   position: absolute;
-  width: 358px;
+  width: 100%;
   height: 182px;
   -o-object-fit: cover;
      object-fit: cover;
@@ -74,37 +109,84 @@
   width: 60px;
   height: 60px;
 }
-#add-post-modal textarea {
-  color: var(--white);
-  margin: 20px 0;
-  border: 1px solid var(--white);
-  border-radius: 12px;
-  padding: 12px;
-  width: 100%;
-  height: 160px;
-  resize: none;
-  background-color: var(--grey-500);
+
+#add-comment-modal .comments {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 10px 0;
+  max-height: 40vh;
+  min-width: 30vw;
 }
-#add-post-modal .buttons {
+#add-comment-modal .comments::-webkit-scrollbar {
+  width: 12px;
+}
+#add-comment-modal .comments::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+#add-comment-modal .comments::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+#add-comment-modal .comments .comment {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  background-color: var(--grey-400);
+  border-radius: 12px;
+  padding: 20px;
+}
+#add-comment-modal .comments .comment .comment-start {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-#add-post-modal .buttons button {
-  color: var(--white);
-  padding: 8px;
-  border: 0;
-  border-radius: 10px;
+#add-comment-modal .comments .comment .comment-start .user-infos {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+#add-comment-modal .comments .comment .comment-start .comment-created-at {
+  opacity: 0.4;
+  margin-bottom: 0.2rem;
+}
+#add-comment-modal .comments .comment .comment-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#add-comment-modal .comments .comment .comment-footer .pencil-icon,
+#add-comment-modal .comments .comment .comment-footer .trash-icon {
   cursor: pointer;
+  color: var(--white);
+  width: 16px;
+  height: 16px;
+  padding: 4px;
+  border-radius: 12px;
   transition: 0.2s;
-  background-color: red;
 }
-#add-post-modal .buttons button:hover {
-  opacity: 0.8;
+#add-comment-modal .comments .comment .comment-footer .pencil-icon:hover,
+#add-comment-modal .comments .comment .comment-footer .trash-icon:hover {
+  background-color: var(--grey-300);
 }
-#add-post-modal .buttons button[type=submit] {
-  background-color: var(--green-400);
+#add-comment-modal textarea {
+  height: 80px;
 }
-#add-post-modal.open {
-  display: block;
+
+@media (max-width: 1225px) {
+  #add-post-modal,
+  #add-comment-modal {
+    width: 60%;
+  }
+}
+@media (max-width: 630px) {
+  #add-post-modal,
+  #add-comment-modal {
+    width: 92%;
+  }
 }/*# sourceMappingURL=modals.css.map */

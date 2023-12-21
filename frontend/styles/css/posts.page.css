@@ -96,7 +96,7 @@ header .header-container .menu button:hover {
   padding: 20px;
   border-radius: 12px;
   background-color: var(--grey-500);
-  width: 30%;
+  width: 36%;
 }
 #posts .post .post-start {
   display: flex;
@@ -118,4 +118,37 @@ header .header-container .menu button:hover {
   width: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.post-footer {
+  display: flex;
+  gap: 10px;
+}
+.post-footer div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.post-footer ion-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: var(--white);
+}
+.post-footer .heart-icon.hearted {
+  background-color: red;
+}
+
+@media (max-width: 1225px) {
+  #posts .post {
+    width: 60%;
+  }
+}
+@media (max-width: 630px) {
+  #posts {
+    margin: 40px 30px;
+  }
+  #posts .post {
+    width: 100%;
+  }
 }/*# sourceMappingURL=posts.page.css.map */

@@ -62,4 +62,10 @@ img.avatar {
   border-radius: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.loading {
+  -o-object-fit: cover;
+     object-fit: cover;
+  width: 40%;
 }/*# sourceMappingURL=global.css.map */

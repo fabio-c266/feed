@@ -14,7 +14,7 @@
 <body>
     <div class="shadow"></div>
 
-    <div id="add-post-modal">
+    <div id="add-post-modal" class="modal">
         <form id="new-post-form">
             <div class="start">
                 <h1 class="title">
@@ -38,6 +38,23 @@
                 <button type="button" class="remove-image-btn" onclick="clearPreviewImage()"
                     style="visibility: hidden;">Remover imagem</button>
             </div>
+        </form>
+    </div>
+
+    <div id="add-comment-modal" class="modal">
+        <form id="new-comment-form">
+            <div class="start">
+                <h1 class="title">
+                    Comentários
+                </h1>
+
+                <ion-icon name="close-outline" onclick="toggleOpenCommentModal()" class="close-icon"></ion-icon>
+            </div>
+
+            <div class="comments"></div>
+
+            <textarea id="new-comment-content" placeholder="Contéudo do comentário"></textarea>
+            <button type="submit">Comentar</button>
         </form>
     </div>
 
@@ -80,6 +97,7 @@
     <script src="scripts/services/user.js"></script>
     <script src="scripts/services/image.js"></script>
     <script src="scripts/services/post.js"></script>
+    <script src="scripts/services/comment.js"></script>
 
     <script src="/scripts/posts.js"></script>
 </body>
