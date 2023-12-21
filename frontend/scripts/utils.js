@@ -1,4 +1,4 @@
-const baseUrl = 'http://10.25.0.158:8000'
+const baseUrl = 'http://localhost:8000'
 
 window.onscroll = () => {
     const headerElement = document.querySelector('header');
