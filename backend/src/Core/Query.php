@@ -43,6 +43,14 @@ class Query
         return $this;
     }
 
+    public function count($column = '*', $newName = false)
+    {
+        $newQuery = $newName ? "SELECT count({$column}) AS {$newName} FROM {$this->tableName} " : "SELECT count({$column}) FROM {$this->tableName} ";
+        var_dump($newQuery);
+        $this->queryContent = $this->queryContent . $newQuery;
+        return $this;
+    }
+
     public function orderBy(string $column, string $by = 'DESC')
     {
         $this->queryContent = $this->queryContent . "ORDER BY {$this->tableName}.{$column} {$by}";

@@ -11,7 +11,7 @@ class PostService
 {
     public function __construct(
         private readonly PostRepository $postRepository,
-        private readonly UserService $userService
+        private readonly UserService $userService,
     ) {
     }
 

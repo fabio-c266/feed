@@ -22,7 +22,7 @@ class PostRepository
     public function findOne(string $idPublic): ?array
     {
         $queryContent = (new Query(tableName: $this->tableName))
-            ->select(['id_public', 'content', 'image_name', 'user_id', 'created_at'])
+            ->select(['id', 'id_public', 'content', 'image_name', 'user_id', 'created_at'])
             ->where('id_public', $idPublic)
             ->build();
 
@@ -54,8 +54,18 @@ class PostRepository
 
     public function findMany(): array
     {
-        $queryContent = "SELECT posts.id_public, posts.content, posts.image_name, posts.created_at, users.id_public AS `user.id_public`, users.username AS `user.username`, users.email AS `user.email`, users.avatar_name AS `user.avatar_name`, users.created_at AS `user.created_at` FROM posts INNER JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC";
-
+        $queryContent =
+            "SELECT 
+        posts.id_public,
+        posts.content,
+        posts.image_name,
+        posts.created_at,
+        users.id_public AS `user.id_public`,
+        users.username AS `user.username`,
+        users.avatar_name AS `user.avatar_name`,
+        users.created_at AS `user.created_at`,
+        (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS commentsAmount FROM posts
+        INNER JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC";
         return ArrayHelper::formatData(Database::query($queryContent));
     }
 
