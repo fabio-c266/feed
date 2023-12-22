@@ -117,7 +117,7 @@
   overflow-y: auto;
   padding: 10px 0;
   max-height: 40vh;
-  min-width: 30vw;
+  min-width: 28vw;
 }
 #add-comment-modal .comments::-webkit-scrollbar {
   width: 12px;
